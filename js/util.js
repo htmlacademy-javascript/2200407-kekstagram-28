@@ -1,7 +1,15 @@
-// Функция для проверки длины строки
-const checkStringLength = (text, maxLength) => {
-  return text.length <= maxLength;
+// Генерируем случайное число в диапозоне min - max
+const getRandomInteger = (min, max) => {
+  const lower = Math.ceil(Math.min(min, max));
+  const upper = Math.floor(Math.max(min, max));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
 };
+
+// Функция для проверки длины строки
+const checkStringLength = (text, maxLength) => (
+  text.length <= maxLength
+);
 
 // Функция для проверки, является ли строка палиндромом
 const isPalindrome = (text) => {
@@ -57,3 +65,5 @@ checkStringLength('проверяемая строка', 18);
 isPalindrome('Лёша на полке клопа нашёл ');
 extractNumbers('1 кефир, 0.5 батона');
 transformPadStart('q', 4, 'we');
+
+export {getRandomInteger};
