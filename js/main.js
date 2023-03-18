@@ -1,3 +1,4 @@
-import {generatePhotos} from './data.js';
+import {renderingThumbnail} from './thumbnail.js';
 
-const allPhotos = generatePhotos();
+renderingThumbnail();
+

@@ -61,9 +61,4 @@ const transformPadStart = (text, minLength, pad) => {
   return result;
 };
 
-checkStringLength('проверяемая строка', 18);
-isPalindrome('Лёша на полке клопа нашёл ');
-extractNumbers('1 кефир, 0.5 батона');
-transformPadStart('q', 4, 'we');
-
 export {getRandomInteger};
