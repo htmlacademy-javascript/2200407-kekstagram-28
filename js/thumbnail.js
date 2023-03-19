@@ -1,25 +1,26 @@
-import {generatePhotos} from './data.js';
+const pictureTemplateElement = document.querySelector('#picture')
+  .content
+  .querySelector('.picture');
+const picturesContainerElement = document.querySelector('.pictures');
 
 // Рендерим миниатюры изображений других пользователей
-const renderingThumbnail = () => {
-  const allPhotos = generatePhotos();
-  const fragmentAllPictures = document.createDocumentFragment();
-  const pictureTemplate = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
-  const picturesContainerElement = document.querySelector('.pictures');
+const renderThumbnails = (allPhotos) => {
+  const fragmentPicturesElement = document.createDocumentFragment();
+
 
   allPhotos.forEach((photo) => {
-    const pictureElement = pictureTemplate.cloneNode(true);
+    const pictureElement = pictureTemplateElement.cloneNode(true);
+    const img = pictureElement.querySelector('.picture__img');
 
-    pictureElement.querySelector('.picture__img').src = photo.url;
+    img.src = photo.url;
+    img.alt = photo.description;
     pictureElement.querySelector('.picture__likes').textContent = photo.likes;
     pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
 
-    fragmentAllPictures.appendChild(pictureElement);
+    fragmentPicturesElement.appendChild(pictureElement);
   });
 
-  picturesContainerElement.appendChild(fragmentAllPictures);
+  picturesContainerElement.appendChild(fragmentPicturesElement);
 };
 
-export {renderingThumbnail};
+export { renderThumbnails };
