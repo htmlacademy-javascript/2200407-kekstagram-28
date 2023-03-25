@@ -61,4 +61,8 @@ const transformPadStart = (text, minLength, pad) => {
   return result;
 };
 
-export {getRandomInteger};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const isEnterKey = (evt) => evt.key === 'Enter';
+
+export {getRandomInteger, isEscapeKey, isEnterKey};

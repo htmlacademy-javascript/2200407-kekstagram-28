@@ -1,7 +1,7 @@
 import {generatePhotos} from './data.js';
-import {renderThumbnails} from './thumbnail.js';
+import {renderGallery} from './gallery.js';
 
 const allPhotos = generatePhotos();
 
-renderThumbnails(allPhotos);
+renderGallery(allPhotos);
 

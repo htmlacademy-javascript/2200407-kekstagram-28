@@ -5,7 +5,7 @@ const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_AVATAR_COUNT = 1;
 const MAX_AVATAR_COUNT = 6;
-const COUNT_COMMENTS = 5;
+const COUNT_COMMENTS = 18; // Добавила количество комментариев больше при генерации, чтобы комментрии показывались больше 5 для отработки кнопки «Загрузить ещё»
 const COUNT_MESSAGES = 2;
 
 const NAMES = [
