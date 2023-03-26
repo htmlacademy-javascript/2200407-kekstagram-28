@@ -7,14 +7,16 @@ const picturesContainerElement = document.querySelector('.pictures');
 const renderGallery = (pictures) => {
   // Открытие большой фотографию по click/enter
   picturesContainerElement.addEventListener('click', (evt) => {
-    const thumbnail = evt.target.closest('[data-thumbnail-id]');
+    const thumbnailElement = evt.target.closest('[data-thumbnail-id]');
 
-    if (!thumbnail) {
+    if (!thumbnailElement) {
       return;
     }
 
+    const thumbnailId = +thumbnailElement.dataset.thumbnailId;
+
     const picture = pictures.find(
-      (item) => item.id === +thumbnail.dataset.thumbnailId
+      (element) => element.id === thumbnailId
     );
     openBigPicture(picture);
   });

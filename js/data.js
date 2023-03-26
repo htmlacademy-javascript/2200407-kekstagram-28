@@ -1,6 +1,6 @@
 import {getRandomInteger} from './util.js';
 
-const COUNT_PHOTOS = 25;
+const COUNT_PICTURES = 25;
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_AVATAR_COUNT = 1;
@@ -71,13 +71,13 @@ const createPhoto = (number) => ({
   comments: generateComments(number),
 });
 
-const generatePhotos = () => {
-  const photos = [];
-  for (let i = 1; i <= COUNT_PHOTOS; i++) {
-    photos.push(createPhoto(i));
+const generatePictures = () => {
+  const pictures = [];
+  for (let i = 1; i <= COUNT_PICTURES; i++) {
+    pictures.push(createPhoto(i));
   }
 
-  return photos;
+  return pictures;
 };
 
-export {generatePhotos};
+export {generatePictures};

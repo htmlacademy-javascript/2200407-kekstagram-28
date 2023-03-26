@@ -3,16 +3,16 @@ const pictureTemplateElement = document.querySelector('#picture')
   .querySelector('.picture');
 
 // Рендерим миниатюры изображений других пользователей
-const renderThumbnails = (allPhotos, container) => {
+const renderThumbnails = (allPhotos, element) => {
   const fragmentPicturesElement = document.createDocumentFragment();
 
 
   allPhotos.forEach((photo) => {
     const pictureElement = pictureTemplateElement.cloneNode(true);
-    const img = pictureElement.querySelector('.picture__img');
+    const imgElement = pictureElement.querySelector('.picture__img');
 
-    img.src = photo.url;
-    img.alt = photo.description;
+    imgElement.src = photo.url;
+    imgElement.alt = photo.description;
     pictureElement.querySelector('.picture__likes').textContent = photo.likes;
     pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
     pictureElement.dataset.thumbnailId = photo.id;
@@ -20,7 +20,7 @@ const renderThumbnails = (allPhotos, container) => {
     fragmentPicturesElement.appendChild(pictureElement);
   });
 
-  container.appendChild(fragmentPicturesElement);
+  element.appendChild(fragmentPicturesElement);
 };
 
 export { renderThumbnails };
