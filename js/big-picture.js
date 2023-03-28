@@ -5,7 +5,7 @@ const COMMENTS_COUNT = 5;
 
 const bigPictureElement = document.querySelector('.big-picture');
 const bigPictureCloseElement = document.querySelector('.big-picture__cancel');
-const bigPictureImgElement = document.querySelector('.big-picture__img');
+const bigPictureImgElement = document.querySelector('.big-picture__img img');
 const bigPictureLikeElement = document.querySelector('.likes-count');
 const bigPictureCaptionElement = document.querySelector('.social__caption');
 const bigPictureCountCommentsElement = document.querySelector('.social__comment-count');
@@ -77,11 +77,11 @@ const onLoadMoreComments = () => {
 };
 
 // Функции закрытия полноразмерного режима для просмотра фотографии
-const onBigPictureClose = () => {
+const onBigPictureCloseClick = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onBigPictureEscPress);
-  bigPictureCloseElement.removeEventListener('click', onBigPictureClose);
+  bigPictureCloseElement.removeEventListener('click', onBigPictureCloseClick);
   commentsButtonLoaderElement.removeEventListener('click', onLoadMoreComments);
 };
 
@@ -89,16 +89,17 @@ const onBigPictureClose = () => {
 const onBigPictureEscPress = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    onBigPictureClose();
+    onBigPictureCloseClick();
   }
 };
 
 // Показываем фотографию в полноразмерном режиме
 const openBigPicture = (picture) => {
   document.addEventListener('keydown', onBigPictureEscPress);
-  bigPictureCloseElement.addEventListener('click', onBigPictureClose);
+  bigPictureCloseElement.addEventListener('click', onBigPictureCloseClick);
 
-  bigPictureImgElement.querySelector('img').src = picture.url;
+  bigPictureImgElement.src = picture.url;
+  bigPictureImgElement.alt = picture.description;
 
   bigPictureLikeElement.textContent = picture.likes;
   bigPictureCaptionElement.textContent = picture.description;

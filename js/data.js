@@ -63,7 +63,7 @@ const generateComments = (number) => {
   return comments;
 };
 
-const createPhoto = (number) => ({
+const createPicture = (number) => ({
   id: number,
   url: `photos/${number}.jpg`,
   description: DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)],
@@ -74,7 +74,7 @@ const createPhoto = (number) => ({
 const generatePictures = () => {
   const pictures = [];
   for (let i = 1; i <= COUNT_PICTURES; i++) {
-    pictures.push(createPhoto(i));
+    pictures.push(createPicture(i));
   }
 
   return pictures;
