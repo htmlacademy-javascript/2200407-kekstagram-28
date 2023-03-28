@@ -16,7 +16,7 @@ const renderGallery = (pictures) => {
     const thumbnailId = +thumbnailElement.dataset.thumbnailId;
 
     const picture = pictures.find(
-      (element) => element.id === thumbnailId
+      ({ id }) => id === thumbnailId
     );
     openBigPicture(picture);
   });

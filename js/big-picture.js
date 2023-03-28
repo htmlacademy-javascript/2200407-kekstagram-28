@@ -1,6 +1,5 @@
 import { isEscapeKey } from './util.js';
 
-const AVATAR_SIZE = 35; // Создала константу размера автарки, потому что вдруг в дальнейшем оно поменяется
 const COMMENTS_COUNT = 5;
 
 const bigPictureElement = document.querySelector('.big-picture');
@@ -27,8 +26,6 @@ const renderComment = (comment) => {
   const newAvatarPictureElement = commentElement.querySelector('.social__picture');
   newAvatarPictureElement.src = comment.avatar;
   newAvatarPictureElement.alt = comment.name;
-  newAvatarPictureElement.width = AVATAR_SIZE;
-  newAvatarPictureElement.height = AVATAR_SIZE;
 
   commentElement.querySelector('.social__text').textContent = comment.message;
 
@@ -76,8 +73,8 @@ const onLoadMoreComments = () => {
   }
 };
 
-// Функции закрытия полноразмерного режима для просмотра фотографии
-const onBigPictureCloseClick = () => {
+// Функция закрытия полноразмерного режима для просмотра фотографии
+const closeBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onBigPictureEscPress);
@@ -85,11 +82,16 @@ const onBigPictureCloseClick = () => {
   commentsButtonLoaderElement.removeEventListener('click', onLoadMoreComments);
 };
 
+// Обработчик закрытия полноразмерного режима по click
+const onBigPictureCloseClick = () => {
+  closeBigPicture();
+};
+
 // Обработчик закрытия полноразмерного режима по esc
 const onBigPictureEscPress = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    onBigPictureCloseClick();
+    closeBigPicture();
   }
 };
 
