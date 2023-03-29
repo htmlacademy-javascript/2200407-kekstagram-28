@@ -1,11 +1,11 @@
 import {getRandomInteger} from './util.js';
 
-const COUNT_PHOTOS = 25;
+const COUNT_PICTURES = 25;
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_AVATAR_COUNT = 1;
 const MAX_AVATAR_COUNT = 6;
-const COUNT_COMMENTS = 5;
+const COUNT_COMMENTS = 18; // Добавила количество комментариев больше при генерации, чтобы комментрии показывались больше 5 для отработки кнопки «Загрузить ещё»
 const COUNT_MESSAGES = 2;
 
 const NAMES = [
@@ -63,7 +63,7 @@ const generateComments = (number) => {
   return comments;
 };
 
-const createPhoto = (number) => ({
+const createPicture = (number) => ({
   id: number,
   url: `photos/${number}.jpg`,
   description: DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)],
@@ -71,13 +71,13 @@ const createPhoto = (number) => ({
   comments: generateComments(number),
 });
 
-const generatePhotos = () => {
-  const photos = [];
-  for (let i = 1; i <= COUNT_PHOTOS; i++) {
-    photos.push(createPhoto(i));
+const generatePictures = () => {
+  const pictures = [];
+  for (let i = 1; i <= COUNT_PICTURES; i++) {
+    pictures.push(createPicture(i));
   }
 
-  return photos;
+  return pictures;
 };
 
-export {generatePhotos};
+export {generatePictures};
