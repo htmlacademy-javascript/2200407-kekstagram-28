@@ -6,11 +6,10 @@ const getRandomInteger = (min, max) => {
   return Math.floor(result);
 };
 
-// Функция для проверки длины строки
-const checkStringLength = (text, maxLength) => (
-  text.length <= maxLength
-);
-
+// Проверяем нажат ли Esc
 const isEscapeKey = ({ key }) => key.startsWith('Esc');
 
-export {getRandomInteger, isEscapeKey};
+// Добавляем и показываем сообщение
+const renderMessage = (element) => document.body.append(element);
+
+export {getRandomInteger, isEscapeKey, renderMessage };

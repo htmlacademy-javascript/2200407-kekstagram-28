@@ -66,7 +66,7 @@ const showCommentsPicture = (comments) => {
 };
 
 // Обработчик кнопки загрузки комментариев
-const onLoadMoreComments = () => {
+const onCommentsButtonLoaderClick = () => {
   addCommentsPicture(allComments);
   if (allComments.length === 0) {
     commentsButtonLoaderElement.classList.add('hidden');
@@ -77,9 +77,9 @@ const onLoadMoreComments = () => {
 const closeBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onBigPictureEscPress);
+  document.removeEventListener('keydown', onDocumentEscKeydown);
   bigPictureCloseElement.removeEventListener('click', onBigPictureCloseClick);
-  commentsButtonLoaderElement.removeEventListener('click', onLoadMoreComments);
+  commentsButtonLoaderElement.removeEventListener('click', onCommentsButtonLoaderClick);
 };
 
 // Обработчик закрытия полноразмерного режима по click
@@ -88,7 +88,7 @@ const onBigPictureCloseClick = () => {
 };
 
 // Обработчик закрытия полноразмерного режима по esc
-const onBigPictureEscPress = (evt) => {
+const onDocumentEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeBigPicture();
@@ -97,7 +97,7 @@ const onBigPictureEscPress = (evt) => {
 
 // Показываем фотографию в полноразмерном режиме
 const openBigPicture = (picture) => {
-  document.addEventListener('keydown', onBigPictureEscPress);
+  document.addEventListener('keydown', onDocumentEscKeydown);
   bigPictureCloseElement.addEventListener('click', onBigPictureCloseClick);
 
   bigPictureImgElement.src = picture.url;
@@ -108,7 +108,7 @@ const openBigPicture = (picture) => {
 
   showCommentsPicture(picture.comments);
 
-  commentsButtonLoaderElement.addEventListener('click', onLoadMoreComments);
+  commentsButtonLoaderElement.addEventListener('click', onCommentsButtonLoaderClick);
 
   bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
