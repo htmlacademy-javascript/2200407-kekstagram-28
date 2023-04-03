@@ -66,39 +66,39 @@ const showCommentsPicture = (comments) => {
 };
 
 // Обработчик кнопки загрузки комментариев
-const onLoadMoreComments = () => {
+function onCommentsButtonLoaderElementClick() {
   addCommentsPicture(allComments);
   if (allComments.length === 0) {
     commentsButtonLoaderElement.classList.add('hidden');
   }
-};
+}
 
 // Функция закрытия полноразмерного режима для просмотра фотографии
 const closeBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onBigPictureEscPress);
-  bigPictureCloseElement.removeEventListener('click', onBigPictureCloseClick);
-  commentsButtonLoaderElement.removeEventListener('click', onLoadMoreComments);
+  document.removeEventListener('keydown', onDocumentEscKeydown);
+  bigPictureCloseElement.removeEventListener('click', onBigPictureCloseElementClick);
+  commentsButtonLoaderElement.removeEventListener('click', onCommentsButtonLoaderElementClick);
 };
 
 // Обработчик закрытия полноразмерного режима по click
-const onBigPictureCloseClick = () => {
+function onBigPictureCloseElementClick() {
   closeBigPicture();
-};
+}
 
 // Обработчик закрытия полноразмерного режима по esc
-const onBigPictureEscPress = (evt) => {
+function onDocumentEscKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeBigPicture();
   }
-};
+}
 
 // Показываем фотографию в полноразмерном режиме
 const openBigPicture = (picture) => {
-  document.addEventListener('keydown', onBigPictureEscPress);
-  bigPictureCloseElement.addEventListener('click', onBigPictureCloseClick);
+  document.addEventListener('keydown', onDocumentEscKeydown);
+  bigPictureCloseElement.addEventListener('click', onBigPictureCloseElementClick);
 
   bigPictureImgElement.src = picture.url;
   bigPictureImgElement.alt = picture.description;
@@ -108,7 +108,7 @@ const openBigPicture = (picture) => {
 
   showCommentsPicture(picture.comments);
 
-  commentsButtonLoaderElement.addEventListener('click', onLoadMoreComments);
+  commentsButtonLoaderElement.addEventListener('click', onCommentsButtonLoaderElementClick);
 
   bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
