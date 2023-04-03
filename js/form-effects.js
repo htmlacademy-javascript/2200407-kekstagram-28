@@ -1,4 +1,4 @@
-const EFFECTS_PARAMS = {
+const effectSettings = {
   CHROME: {
     MIN: 0,
     MAX: 1,
@@ -34,6 +34,9 @@ const EFFECTS_PARAMS = {
 };
 
 const SCALE_STEP = 25;
+const SCALE_MAX = 100;
+const SCALE_MIN = 25;
+const EFFECTS_NONE = 'NONE';
 
 const picturePreviewElement = document.querySelector('.img-upload__preview img');
 const effectsListElement = document.querySelector('.img-upload__effects');
@@ -42,79 +45,81 @@ const levelSliderElement = document.querySelector('.effect-level__slider');
 const sliderValueElement = document.querySelector('.effect-level__value');
 const scaleControlValueElement = document.querySelector('.scale__control--value');
 const scaleControlSmallerElement = document.querySelector('.scale__control--smaller');
-const scaleControlBiggerElement = document.querySelector('.scale__control--bigger');
+const scaleControlAllElement = document.querySelectorAll('.scale__control');
 
 let typeEffect = '';
 
-// Изменяем масштаб фотографии
-const onScaleControlChange = function (evt) {
+// Обработчик изменения масштаба фотографии
+function onScaleControlAllElementClick(evt) {
   let scale = evt.target.className === scaleControlSmallerElement.className ? -SCALE_STEP : SCALE_STEP;
   scale += Number(scaleControlValueElement.value.replace('%', ''));
 
-  if (scale <= 100 && scale >= 25) {
-    scaleControlValueElement.value = scale;
+  if (scale <= SCALE_MAX && scale >= SCALE_MIN) {
+    scaleControlValueElement.value = `${scale}%`;
     scale /= 100;
     picturePreviewElement.style.transform = `scale(${scale})`;
   }
-};
+}
 
 // Активируем обработчики масштаба фотографии
 const activateScaleControl = () => {
-  scaleControlSmallerElement.addEventListener('click', onScaleControlChange);
-  scaleControlBiggerElement.addEventListener('click', onScaleControlChange);
+  scaleControlAllElement.forEach((element) => {
+    element.addEventListener('click', onScaleControlAllElementClick);
+  });
 };
 
 // Удаляем обработчики масштаба фотографии
 const removeScaleControl = () => {
-  scaleControlSmallerElement.removeEventListener('click', onScaleControlChange);
-  scaleControlBiggerElement.removeEventListener('click', onScaleControlChange);
+  scaleControlAllElement.forEach((element) => {
+    element.removeEventListener('click', onScaleControlAllElementClick);
+  });
 };
 
 //  Функция обновления параметров слайдера
-const updateParamsSlider = (min = 0, max = 100, step = 1) => {
+const updateSliderParams = (min = 0, max = 100, step = 1) => {
   levelSliderElement.noUiSlider.updateOptions({
     range: {
-      min: min,
-      max: max,
+      min,
+      max,
     },
-    step: step,
+    step,
     start: max,
   });
 };
 
 // Функция обновления эффекта
 const updateEffectFilter = () => {
-  picturePreviewElement.className = ''; // сбрасываем классы, чтобы не накапливались перед измененением
-  if (typeEffect !== 'NONE') {
+  picturePreviewElement.className = picturePreviewElement.className.replace(/effects__preview--\w+/g, ''); // сбрасываем классы, чтобы не накапливались перед измененением
+  if (typeEffect !== EFFECTS_NONE) {
     sliderElement.classList.remove('hidden');
     picturePreviewElement.classList.add(`effects__preview--${typeEffect.toLowerCase()}`);
   } else {
     sliderElement.classList.add('hidden');
     picturePreviewElement.style.filter = '';
-    sliderValueElement.value = null;
+    sliderValueElement.value = '';
   }
 };
 
 // Обрабочик изменения эффекта на другой
-const onEffectItemChange = (evt) => {
+function onEffectsListElementChange(evt) {
   if (evt.target.closest('.effects__radio')) {
     typeEffect = evt.target.value.toUpperCase();
 
     updateEffectFilter();
-    updateParamsSlider(EFFECTS_PARAMS?.[typeEffect]?.MIN, EFFECTS_PARAMS?.[typeEffect]?.MAX, EFFECTS_PARAMS?.[typeEffect]?.STEP);
+    updateSliderParams(effectSettings?.[typeEffect]?.MIN, effectSettings?.[typeEffect]?.MAX, effectSettings?.[typeEffect]?.STEP);
   }
-};
+}
 
 // Обработчик изменения эффектов по бегунку слайдера
-const onLevelSliderUpdate = () => {
+function onLevelSliderElementUpdate() {
   const valueCurrent = levelSliderElement.noUiSlider.get();
   sliderValueElement.value = valueCurrent;
 
-  const effectCurrent = EFFECTS_PARAMS?.[typeEffect]?.CSS ?? '';
-  const unitCurrent = EFFECTS_PARAMS?.[typeEffect]?.UNIT ?? '';
+  const effectCurrent = effectSettings?.[typeEffect]?.CSS ?? '';
+  const unitCurrent = effectSettings?.[typeEffect]?.UNIT ?? '';
 
-  picturePreviewElement.style.filter = `${effectCurrent}(${valueCurrent + unitCurrent})`;
-};
+  picturePreviewElement.style.filter = `${effectCurrent}(${valueCurrent}${unitCurrent})`;
+}
 
 const createSlider = () => {
   picturePreviewElement.style.filter = '';
@@ -132,10 +137,10 @@ const createSlider = () => {
 // Удаляем и скрываем слайдер, удаляем обработчик, сбрасываем стили
 const destroySlider = () => {
   levelSliderElement.noUiSlider.destroy();
-  effectsListElement.removeEventListener('change', onEffectItemChange);
+  effectsListElement.removeEventListener('change', onEffectsListElementChange);
   sliderElement.classList.add('hidden');
-  picturePreviewElement.style = '';
-  picturePreviewElement.className = '';
+  picturePreviewElement.style.transform = '';
+  picturePreviewElement.className = picturePreviewElement.className.replace(/effects__preview--\w+/g, '');
   typeEffect = '';
   sliderValueElement.value = null;
 };
@@ -143,8 +148,8 @@ const destroySlider = () => {
 const activateEffects = () => {
   createSlider();
 
-  effectsListElement.addEventListener('change', onEffectItemChange);
-  levelSliderElement.noUiSlider.on('update', onLevelSliderUpdate);
+  effectsListElement.addEventListener('change', onEffectsListElementChange);
+  levelSliderElement.noUiSlider.on('update', onLevelSliderElementUpdate);
 };
 
 export { activateEffects, destroySlider, activateScaleControl, removeScaleControl };

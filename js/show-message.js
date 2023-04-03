@@ -1,78 +1,47 @@
 import { isEscapeKey, renderMessage } from './util.js';
 
+const MESSAGE_TYPES_ERROR = 'error';
+const MESSAGE_TYPES_SUCCESS = 'success';
 const errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
 const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
-let errorMessageClone;
-let successMessageClone;
+let messageCloneElement = null;
 
-// Обработчик закрытия сообщения об ошибке по esc
-const onErrorMessageKeydown = (evt) => {
+// Удаляем сообщение и обработчик
+const removeMessage = () => {
+  messageCloneElement.remove();
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
+
+// Обработчик закрытия сообщения по esc
+function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    removeErrorMessage();
+    removeMessage();
   }
-};
+}
 
-// Обработчик закрытия сообщения об успешной отправке по esc
-const onSuccessMessageKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    removeSuccessMessage();
-  }
-};
-
-// Обработчик закрытия сообщения об ошибке по клику
-const onErrorMessageClick = (evt) => {
+// Обработчик закрытия сообщения по клику
+function onMessageCloneElementClick(evt) {
   evt.preventDefault();
-  if (evt.target.closest('.error__button')) {
-    removeErrorMessage();
+  if (evt.target.closest('.error__button') || evt.target.closest('.success__button')) {
+    removeMessage();
   }
-};
+}
 
-// Обработчик закрытия сообщения об успешной по клику
-const onSuccessMessageClick = (evt) => {
-  evt.preventDefault();
-  if (evt.target.closest('.success__button')) {
-    removeSuccessMessage();
-  }
-};
-
-// Удаляем сообщение об ошибке и обработчик
-const removeErrorMessage = () => {
-  errorMessageClone.remove();
-  document.removeEventListener('keydown', onErrorMessageKeydown);
-};
-
-// Удаляем сообщение об успешной отправки и обработчик
-const removeSuccessMessage = () => {
-  successMessageClone.remove();
-  document.removeEventListener('keydown', onSuccessMessageKeydown);
-};
-
-// Создаем сообщение об ошибке
-const createErrorMessage = (customTest) => {
-  errorMessageClone = errorTemplateElement.cloneNode(true);
+// Создаем сообщение
+const createMessage = (typeMessage, customTest) => {
+  messageCloneElement = typeMessage === MESSAGE_TYPES_ERROR ? errorTemplateElement.cloneNode(true) : successTemplateElement;
 
   // Если пришел кастомный текст, то в тайтл появляется пояснение
   if (customTest) {
-    const errorTitleElement = errorMessageClone.querySelector('.error__title');
-    errorTitleElement.textContent = customTest;
+    const titleElement = messageCloneElement.querySelector(`.${typeMessage}__title`);
+    titleElement.textContent = customTest;
   }
-  renderMessage(errorMessageClone);
+  renderMessage(messageCloneElement);
 
-  document.addEventListener('keydown', onErrorMessageKeydown);
-  errorMessageClone.addEventListener('click', onErrorMessageClick);
+  document.addEventListener('keydown', onDocumentKeydown);
+  messageCloneElement.addEventListener('click', onMessageCloneElementClick);
 };
 
-// Создаем сообщение об успешной отправки
-const createSuccessMessage = () => {
-  successMessageClone = successTemplateElement.cloneNode(true);
-  renderMessage(successMessageClone);
-
-  document.addEventListener('keydown', onSuccessMessageKeydown);
-  successMessageClone.addEventListener('click', onSuccessMessageClick);
-
-};
-
-export { createErrorMessage, createSuccessMessage };
+export { createMessage, MESSAGE_TYPES_ERROR, MESSAGE_TYPES_SUCCESS};

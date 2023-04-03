@@ -1,7 +1,7 @@
 import { isEscapeKey } from './util.js';
 import { addValidation, validatePristine, resetPristine } from './form-validation.js';
 import { activateEffects, destroySlider, activateScaleControl, removeScaleControl } from './form-effects.js';
-import { createErrorMessage, createSuccessMessage } from './show-message.js';
+import { createMessage, MESSAGE_TYPES_ERROR, MESSAGE_TYPES_SUCCESS } from './show-message.js';
 
 const FILE_TYPES = ['gif', 'png', 'jpeg', 'jpg'];
 const FILE_TYPES_ERROR_MESSAGE = 'Допустимы только файлы изображений: gif, png, jpeg, jpg';
@@ -15,13 +15,6 @@ const descriptionInputElement = document.querySelector('.text__description');
 const submitButtonElement = document.querySelector('.img-upload__submit');
 const picturePreviewElement = document.querySelector('.img-upload__preview img');
 
-// Закрываем форму редактирования изображения, если не в фокусе на элементах указанных в ТЗ
-function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt) && !hashTagElement.matches(':focus') && !descriptionInputElement.matches(':focus')) {
-    closeEditPictureForm();
-  }
-}
-
 // Показываем форму редактирования изображения
 const showEditPictureElement = () => {
   activateScaleControl();
@@ -30,43 +23,46 @@ const showEditPictureElement = () => {
   document.body.classList.add('modal-open');
 
   document.addEventListener('keydown', onDocumentKeydown);
+  pictureCloseButtonElement.addEventListener('click', onPictureCloseButtonElementClick);
 };
 
 // Закрывает форму и сбрасываем в исходное состояние
 const closeEditPictureForm = () => {
+  uploadPictureElement.classList.add('hidden');
   editPictureFormElement.reset();
   destroySlider();
   removeScaleControl();
   resetPristine();
 
-  uploadPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
   document.removeEventListener('keydown', onDocumentKeydown);
-
+  pictureCloseButtonElement.removeEventListener('click', onPictureCloseButtonElementClick);
 };
 
-// Блокируем кнопку отправки
-const blockSubmitButton = () => {
-  submitButtonElement.disabled = !submitButtonElement.disabled;
-};
+// Обработчик закрытия формы редактирования изображения, если не в фокусе на элементах указанных в ТЗ
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt) && !hashTagElement.matches(':focus') && !descriptionInputElement.matches(':focus')) {
+    closeEditPictureForm();
+  }
+}
 
 // Обработчик Submit формы
-const onEditPictureFormSubmit = (evt) => {
+function onEditPictureFormElementSubmit(evt) {
   evt.preventDefault();
 
   // Если валидация прошла то блокируем кнопку и отправляем данны
   if (validatePristine()) {
-    blockSubmitButton();
+    submitButtonElement.disabled = true;
     // Тут будет потом добавлена отправка данных на сервер, а пока просто показываю информацию об успешной отправке, закрываю форму если валидация проходит
-    createSuccessMessage();
+    createMessage(MESSAGE_TYPES_SUCCESS);
     closeEditPictureForm();
-    blockSubmitButton();
+    submitButtonElement.disabled = false;
   }
-};
+}
 
 // Обработчик загрузки изображения
-const onFileUploadChange = () => {
+function onUploadPictureInputElementChange() {
   const file = uploadPictureInputElement.files[0];
   const fileName = file.name.toLowerCase();
   const isImage = fileName ? FILE_TYPES.some((type) => fileName.endsWith(type)) : false;
@@ -75,21 +71,20 @@ const onFileUploadChange = () => {
     picturePreviewElement.src = URL.createObjectURL(file);
     showEditPictureElement();
   } else {
-    createErrorMessage(FILE_TYPES_ERROR_MESSAGE);
+    createMessage(MESSAGE_TYPES_ERROR, FILE_TYPES_ERROR_MESSAGE);
   }
-};
+}
 
 // Обработчик кнопки закрытия формы редактирования изображения
-const onEditPictureCloseButtonClick = (evt) => {
+function onPictureCloseButtonElementClick(evt) {
   evt.preventDefault();
   closeEditPictureForm();
-};
+}
 
 // Иницируем работу с формой
 const initFormActions = () => {
-  uploadPictureInputElement.addEventListener('change', onFileUploadChange);
-  editPictureFormElement.addEventListener('submit', onEditPictureFormSubmit);
-  pictureCloseButtonElement.addEventListener('click', onEditPictureCloseButtonClick);
+  uploadPictureInputElement.addEventListener('change', onUploadPictureInputElementChange);
+  editPictureFormElement.addEventListener('submit', onEditPictureFormElementSubmit);
 
   addValidation();
 };
