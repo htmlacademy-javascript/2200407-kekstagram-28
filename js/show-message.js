@@ -1,7 +1,10 @@
 import { isEscapeKey, renderMessage } from './util.js';
 
-const MESSAGE_TYPES_ERROR = 'error';
-const MESSAGE_TYPES_SUCCESS = 'success';
+const MessageType = {
+  ERROR: 'error',
+  SUCCESS: 'success',
+};
+
 const errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
 const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
@@ -24,14 +27,14 @@ function onDocumentKeydown(evt) {
 // Обработчик закрытия сообщения по клику
 function onMessageCloneElementClick(evt) {
   evt.preventDefault();
-  if (evt.target.closest('.error__button') || evt.target.closest('.success__button')) {
+  if (evt.target.closest('.error__button') || evt.target.matches('.error') || evt.target.closest('.success__button') || evt.target.matches('.success')) {
     removeMessage();
   }
 }
 
 // Создаем сообщение
 const createMessage = (typeMessage, customTest) => {
-  messageCloneElement = typeMessage === MESSAGE_TYPES_ERROR ? errorTemplateElement.cloneNode(true) : successTemplateElement;
+  messageCloneElement = typeMessage === MessageType.ERROR ? errorTemplateElement.cloneNode(true) : successTemplateElement;
 
   // Если пришел кастомный текст, то в тайтл появляется пояснение
   if (customTest) {
@@ -44,4 +47,4 @@ const createMessage = (typeMessage, customTest) => {
   messageCloneElement.addEventListener('click', onMessageCloneElementClick);
 };
 
-export { createMessage, MESSAGE_TYPES_ERROR, MESSAGE_TYPES_SUCCESS};
+export { createMessage, MessageType};

@@ -1,27 +1,30 @@
-import { renderThumbnails } from './thumbnail.js';
 import { openBigPicture } from './big-picture.js';
 
 const picturesContainerElement = document.querySelector('.pictures');
+const pictureTemplateElement = document.querySelector('#picture')
+  .content
+  .querySelector('.picture');
 
-// генерируем галлерею и вешаем событие на открытие
-const renderGallery = (pictures) => {
-  // Открытие большой фотографию по click/enter
-  picturesContainerElement.addEventListener('click', (evt) => {
-    const thumbnailElement = evt.target.closest('[data-thumbnail-id]');
+// Рендерим миниатюру изображения, вешаем событие на открытие, добавляем на экран
+const renderThumbnail = (picture) => {
+    const pictureElement = pictureTemplateElement.cloneNode(true);
+    const imgElement = pictureElement.querySelector('.picture__img');
 
-    if (!thumbnailElement) {
-      return;
-    }
+    imgElement.src = picture.url;
+    imgElement.alt = picture.description;
+    pictureElement.querySelector('.picture__likes').textContent = picture.likes;
+    pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
+    pictureElement.dataset.thumbnailId = picture.id;
 
-    const thumbnailId = +thumbnailElement.dataset.thumbnailId;
+    pictureElement.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openBigPicture(picture);
+    });
 
-    const picture = pictures.find(
-      ({ id }) => id === thumbnailId
-    );
-    openBigPicture(picture);
-  });
-
-  renderThumbnails(pictures, picturesContainerElement);
+  picturesContainerElement.appendChild(pictureElement);
 };
+
+// генерируем галлерею
+const renderGallery = (pictures) => pictures.forEach((picture) => renderThumbnail(picture));
 
 export { renderGallery };

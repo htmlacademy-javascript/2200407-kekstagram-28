@@ -1,7 +1,8 @@
 import { isEscapeKey } from './util.js';
 import { addValidation, validatePristine, resetPristine } from './form-validation.js';
 import { activateEffects, destroySlider, activateScaleControl, removeScaleControl } from './form-effects.js';
-import { createMessage, MESSAGE_TYPES_ERROR, MESSAGE_TYPES_SUCCESS } from './show-message.js';
+import { createMessage, MessageType} from './show-message.js';
+import { sendData } from './backend.js';
 
 const FILE_TYPES = ['gif', 'png', 'jpeg', 'jpg'];
 const FILE_TYPES_ERROR_MESSAGE = 'Допустимы только файлы изображений: gif, png, jpeg, jpg';
@@ -33,7 +34,7 @@ const closeEditPictureForm = () => {
   destroySlider();
   removeScaleControl();
   resetPristine();
-
+  submitButtonElement.disabled = false;
   document.body.classList.remove('modal-open');
 
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -54,10 +55,12 @@ function onEditPictureFormElementSubmit(evt) {
   // Если валидация прошла то блокируем кнопку и отправляем данны
   if (validatePristine()) {
     submitButtonElement.disabled = true;
-    // Тут будет потом добавлена отправка данных на сервер, а пока просто показываю информацию об успешной отправке, закрываю форму если валидация проходит
-    createMessage(MESSAGE_TYPES_SUCCESS);
-    closeEditPictureForm();
-    submitButtonElement.disabled = false;
+
+    // Отправляем данные на сервер
+    sendData(new FormData(evt.target))
+      .then(() => createMessage(MessageType.SUCCESS))
+      .catch(() => createMessage(MessageType.ERROR))
+      .finally(() => closeEditPictureForm());
   }
 }
 
@@ -71,7 +74,8 @@ function onUploadPictureInputElementChange() {
     picturePreviewElement.src = URL.createObjectURL(file);
     showEditPictureElement();
   } else {
-    createMessage(MESSAGE_TYPES_ERROR, FILE_TYPES_ERROR_MESSAGE);
+    createMessage(MessageType.ERROR, FILE_TYPES_ERROR_MESSAGE);
+    uploadPictureInputElement.value = '';
   }
 }
 
