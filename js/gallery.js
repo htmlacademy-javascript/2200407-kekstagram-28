@@ -4,6 +4,7 @@ const picturesContainerElement = document.querySelector('.pictures');
 const pictureTemplateElement = document.querySelector('#picture')
   .content
   .querySelector('.picture');
+const fragmentPicturesElement = document.createDocumentFragment();
 
 // Рендерим миниатюру изображения, вешаем событие на открытие, добавляем на экран
 const renderThumbnail = (picture) => {
@@ -21,10 +22,14 @@ const renderThumbnail = (picture) => {
     openBigPicture(picture);
   });
 
-  picturesContainerElement.appendChild(pictureElement);
+  fragmentPicturesElement.appendChild(pictureElement);
 };
 
 // генерируем галлерею
-const renderGallery = (pictures) => pictures.forEach((picture) => renderThumbnail(picture));
+const renderGallery = (pictures) => {
+  pictures.forEach((picture) => renderThumbnail(picture));
+
+  picturesContainerElement.appendChild(fragmentPicturesElement);
+};
 
 export { renderGallery };
