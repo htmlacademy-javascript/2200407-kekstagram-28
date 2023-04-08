@@ -1,8 +1,14 @@
-import { generatePictures } from './data.js';
 import { renderGallery } from './gallery.js';
 import { initFormActions } from './form.js';
+import { getData } from './backend.js';
+import { createMessage, MessageType} from './show-message.js';
 
-const allPictures = generatePictures();
-
-renderGallery(allPictures);
-initFormActions();
+getData()
+  .then((photos) => {
+    renderGallery(photos);
+    initFormActions();
+  })
+  .catch((err) => {
+    createMessage(MessageType.ERROR, err.message);
+  }
+  );

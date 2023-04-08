@@ -1220,7 +1220,7 @@ main {
   padding: 50px 20px;
   padding-top: 150px;
   margin-top: 200px;
-
+  line-height: normal;
   display: flex;
   flex-direction: column;
   justify-content: center;

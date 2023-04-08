@@ -1,42 +1,43 @@
-const effectSettings = {
-  CHROME: {
-    MIN: 0,
-    MAX: 1,
-    STEP: 0.1,
-    CSS: 'grayscale',
-  },
-  SEPIA: {
-    MIN: 0,
-    MAX: 1,
-    STEP: 0.1,
-    CSS: 'sepia',
-  },
-  MARVIN: {
-    MIN: 0,
-    MAX: 100,
-    STEP: 1,
-    CSS: 'invert',
-    UNIT: '%',
-  },
-  PHOBOS: {
-    MIN: 0,
-    MAX: 3,
-    STEP: 0.1,
-    CSS: 'blur',
-    UNIT: 'px',
-  },
-  HEAT: {
-    MIN: 1,
-    MAX: 3,
-    STEP: 0.1,
-    CSS: 'brightness',
-  },
+const ScaleValue = {
+  STEP: 25,
+  MAX: 100,
+  MIN: 25,
 };
 
-const SCALE_STEP = 25;
-const SCALE_MAX = 100;
-const SCALE_MIN = 25;
-const EFFECTS_NONE = 'NONE';
+const effectToSettings = {
+  chrome: {
+    min: 0,
+    max: 1,
+    step: 0.1,
+    css: 'grayscale',
+  },
+  sepia: {
+    min: 0,
+    max: 1,
+    step: 0.1,
+    css: 'sepia',
+  },
+  marvin: {
+    min: 0,
+    max: 100,
+    step: 1,
+    css: 'invert',
+    unit: '%',
+  },
+  phobos: {
+    min: 0,
+    max: 3,
+    step: 0.1,
+    css: 'blur',
+    unit: 'px',
+  },
+  heat: {
+    min: 1,
+    max: 3,
+    step: 0.1,
+    css: 'brightness',
+  },
+};
 
 const picturePreviewElement = document.querySelector('.img-upload__preview img');
 const effectsListElement = document.querySelector('.img-upload__effects');
@@ -51,10 +52,10 @@ let typeEffect = '';
 
 // Обработчик изменения масштаба фотографии
 function onScaleControlAllElementClick(evt) {
-  let scale = evt.target.className === scaleControlSmallerElement.className ? -SCALE_STEP : SCALE_STEP;
+  let scale = evt.target.className === scaleControlSmallerElement.className ? -ScaleValue.STEP : ScaleValue.STEP;
   scale += Number(scaleControlValueElement.value.replace('%', ''));
 
-  if (scale <= SCALE_MAX && scale >= SCALE_MIN) {
+  if (scale <= ScaleValue.MAX && scale >= ScaleValue.MIN) {
     scaleControlValueElement.value = `${scale}%`;
     scale /= 100;
     picturePreviewElement.style.transform = `scale(${scale})`;
@@ -90,9 +91,9 @@ const updateSliderParams = (min = 0, max = 100, step = 1) => {
 // Функция обновления эффекта
 const updateEffectFilter = () => {
   picturePreviewElement.className = picturePreviewElement.className.replace(/effects__preview--\w+/g, ''); // сбрасываем классы, чтобы не накапливались перед измененением
-  if (typeEffect !== EFFECTS_NONE) {
+  if (typeEffect !== 'none') {
     sliderElement.classList.remove('hidden');
-    picturePreviewElement.classList.add(`effects__preview--${typeEffect.toLowerCase()}`);
+    picturePreviewElement.classList.add(`effects__preview--${typeEffect}`);
   } else {
     sliderElement.classList.add('hidden');
     picturePreviewElement.style.filter = '';
@@ -103,10 +104,10 @@ const updateEffectFilter = () => {
 // Обрабочик изменения эффекта на другой
 function onEffectsListElementChange(evt) {
   if (evt.target.closest('.effects__radio')) {
-    typeEffect = evt.target.value.toUpperCase();
+    typeEffect = evt.target.value;
 
     updateEffectFilter();
-    updateSliderParams(effectSettings?.[typeEffect]?.MIN, effectSettings?.[typeEffect]?.MAX, effectSettings?.[typeEffect]?.STEP);
+    updateSliderParams(effectToSettings?.[typeEffect]?.min, effectToSettings?.[typeEffect]?.max, effectToSettings?.[typeEffect]?.step);
   }
 }
 
@@ -115,8 +116,8 @@ function onLevelSliderElementUpdate() {
   const valueCurrent = levelSliderElement.noUiSlider.get();
   sliderValueElement.value = valueCurrent;
 
-  const effectCurrent = effectSettings?.[typeEffect]?.CSS ?? '';
-  const unitCurrent = effectSettings?.[typeEffect]?.UNIT ?? '';
+  const effectCurrent = effectToSettings?.[typeEffect]?.css ?? '';
+  const unitCurrent = effectToSettings?.[typeEffect]?.unit ?? '';
 
   picturePreviewElement.style.filter = `${effectCurrent}(${valueCurrent}${unitCurrent})`;
 }
@@ -142,7 +143,7 @@ const destroySlider = () => {
   picturePreviewElement.style.transform = '';
   picturePreviewElement.className = picturePreviewElement.className.replace(/effects__preview--\w+/g, '');
   typeEffect = '';
-  sliderValueElement.value = null;
+  sliderValueElement.value = '';
 };
 
 const activateEffects = () => {
