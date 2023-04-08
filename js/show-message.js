@@ -34,7 +34,9 @@ function onMessageCloneElementClick(evt) {
 
 // Создаем сообщение
 const createMessage = (typeMessage, customTest) => {
-  messageCloneElement = typeMessage === MessageType.ERROR ? errorTemplateElement.cloneNode(true) : successTemplateElement.cloneNode(true);
+  const templateElement = typeMessage === MessageType.ERROR ? errorTemplateElement : successTemplateElement;
+
+  messageCloneElement = templateElement.cloneNode(true);
 
   // Если пришел кастомный текст, то в тайтл появляется пояснение
   if (customTest) {
