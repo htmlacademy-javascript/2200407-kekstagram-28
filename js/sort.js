@@ -1,5 +1,5 @@
 import { renderGallery } from './gallery.js';
-import { debounce, shuffleArrayRandom } from './util.js';
+import { debounce, shuffleDataRandom, removeElement } from './util.js';
 
 const COUNT_RANDOM_PICTURES = 10;
 const DELAY_INTERVAL = 500;
@@ -8,11 +8,8 @@ const picturesFiltersElement = document.querySelector('.img-filters');
 const filterRandomElement = document.querySelector('#filter-random');
 const filterDiscussedElement = document.querySelector('#filter-discussed');
 
-// Удаляем все созданные ранее изображения
-const removePictures = (elements) => elements.forEach((element) => element.remove());
-
 // Сортируем изображения случайно
-const sortRandom = (data) => shuffleArrayRandom(data).slice(0, COUNT_RANDOM_PICTURES);
+const sortRandom = (data) => shuffleDataRandom(data).slice(0, COUNT_RANDOM_PICTURES);
 
 // Сортируем изображения по количеству комментариев
 const sortDiscussed = (data) => data.sort((a, b) => b.comments.length - a.comments.length);
@@ -28,7 +25,7 @@ const updatePictures = (targetElement, pictures) => {
     copyPictures = sortDiscussed(copyPictures);
   }
 
-  removePictures(document.querySelectorAll('.picture'));
+  document.querySelectorAll('.picture').forEach(removeElement);
   renderGallery(copyPictures);
 };
 
