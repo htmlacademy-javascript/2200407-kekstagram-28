@@ -25,7 +25,7 @@ const renderThumbnail = (picture) => {
   fragmentPicturesElement.appendChild(pictureElement);
 };
 
-// генерируем галлерею
+// генерируем галлерею и показываем фильтры
 const renderGallery = (pictures) => {
   pictures.forEach((picture) => renderThumbnail(picture));
 
