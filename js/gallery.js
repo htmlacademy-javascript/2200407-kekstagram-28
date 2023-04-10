@@ -4,7 +4,6 @@ const picturesContainerElement = document.querySelector('.pictures');
 const pictureTemplateElement = document.querySelector('#picture')
   .content
   .querySelector('.picture');
-const fragmentPicturesElement = document.createDocumentFragment();
 
 // Рендерим миниатюру изображения, вешаем событие на открытие, добавляем на экран
 const renderThumbnail = (picture) => {
@@ -22,12 +21,17 @@ const renderThumbnail = (picture) => {
     openBigPicture(picture);
   });
 
-  fragmentPicturesElement.appendChild(pictureElement);
+  return pictureElement;
 };
 
 // генерируем галлерею и показываем фильтры
 const renderGallery = (pictures) => {
-  pictures.forEach((picture) => renderThumbnail(picture));
+  const fragmentPicturesElement = document.createDocumentFragment();
+
+  pictures.forEach((picture) => {
+    const thumbnailElement = renderThumbnail(picture);
+    fragmentPicturesElement.appendChild(thumbnailElement);
+  });
 
   picturesContainerElement.appendChild(fragmentPicturesElement);
 };

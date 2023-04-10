@@ -18,20 +18,24 @@ const debounce = (callback, timeoutDelay) => {
 
   return (...rest) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+    timeoutId = setTimeout(callback, timeoutDelay, ...rest);
   };
 };
 
 // Перемешиваем случайно массив
-const shuffleArrayRandom = (array) => {
-  for (let i = 0; i < array.length - 1; i++) {
-    const j = getRandomInteger(0, array.length - 1);
-    const buffer = array[i];
-    array[i] = array[j];
-    array[j] = buffer;
+const shuffleDataRandom = (data) => {
+  for (let i = 0; i < data.length - 1; i++) {
+    const randomIndex = getRandomInteger(0, data.length - 1);
+    const buffer = data[i];
+    data[i] = data[randomIndex];
+    data[randomIndex] = buffer;
   }
 
-  return array;
+  return data;
 };
 
-export {getRandomInteger, isEscapeKey, renderMessage, debounce, shuffleArrayRandom };
+const removeElement = (element) => {
+  element.remove();
+};
+
+export {getRandomInteger, isEscapeKey, renderMessage, debounce, shuffleDataRandom, removeElement };
