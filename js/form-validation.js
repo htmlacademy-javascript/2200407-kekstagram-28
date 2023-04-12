@@ -28,7 +28,7 @@ const validateHashTags = (value) => {
     return true;
   }
   // Разбиваем хэш-теги на массив
-  const hashTags = value.split(/\s+/);
+  const hashTags = value.toLowerCase().split(/\s+/);
   const isValid = isHashTagRegExp(hashTags) && isHashTagDuplicate(hashTags) && isHashTagsCountLength(hashTags);
 
   return isValid;
